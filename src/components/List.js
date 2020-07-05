@@ -1,20 +1,28 @@
 import React from 'react';
-import { SafeAreaView, FlatList, StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { SafeAreaView, FlatList, StyleSheet, Text, TouchableOpacity, Button, View} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 
-function Item({ domain, onPress }) {
+function Item({ domain, onPress, id, onDelete}) {
   return (
-    <TouchableOpacity style={styles.item} onPress={onPress}>
-        <Text style={styles.title}>{domain}</Text>
-    </TouchableOpacity>
+    <View style={styles.container}>
+      <TouchableOpacity style={styles.item} onPress={onPress}>
+          <Icon name="globe" size={30} color="grey" />
+          <Text style={styles.title}>{domain}</Text>
+      </TouchableOpacity>
+      <View style={styles.delete} >
+        <Icon name="trash" size={30} color="grey" onPress={()=>onDelete(id)}/>
+      </View>
+    </View>
+    
   );
 }
 
-export default function List({data, navigation}) {
+export default function List({data, onDelete, onPress}) {
   return (
     <SafeAreaView>
       <FlatList
         data={data}
-        renderItem={({ item }) => <Item domain={item.domain_name} price={item.price} onPress={() => {navigation.navigate('Template1', item)}}/>}
+        renderItem={({ item }) => <Item domain={item.domain_name} price={item.price} onPress={() => onPress(item)} id={item.id} onDelete={onDelete}/>}
         keyExtractor={item => item.domain_name}
       />
     </SafeAreaView>
@@ -23,15 +31,24 @@ export default function List({data, navigation}) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    flexDirection:'row',
+    paddingHorizontal : 10
   },
   item: {
-    backgroundColor: '#ccc',
-    padding: 20,
-    borderBottomColor:'green',
-    marginHorizontal: 16,
+    flexDirection:'row',
+    padding: 10,
+    width : '80%',
+    alignItems : 'center'
   },
   title: {
-    fontSize: 32,
+    fontSize: 18,
+    paddingHorizontal : 10
   },
+  delete : {
+    padding: 10,
+    width : '20%',
+    alignItems : 'center',
+    justifyContent : 'flex-end'
+  }
 });

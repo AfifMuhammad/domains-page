@@ -1,69 +1,66 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { WebView } from 'react-native-webview';
-import { Platform, StyleSheet, Text, View, Alert } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
-class Template1 extends Component {
-  renderHtml() {
+export default function Template1 ({route}) {
+  const renderHtml = () => {
     return `<html>
-      <head><meta charset="utf-8">
-        <title>Sales Inquery || [Your Domain]</title>
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
-        <link href="https://fonts.googleapis.com/css?family=Mukta+Mahee:300,700" rel="stylesheet">
-        <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
-        <script src='https://www.google.com/recaptcha/api.js'></script>
-      </head>
-      <body><section class="bg-alt hero p-0">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-sm bg-faded text-center col-fixed">
-                    <div class="vMiddle">
-                      <h1 class="pt-4 h2">
-                          <span class="text-green">${this.props.route.params.domain_name}</span>
-                          <small>available for sale</small>
-                      </h1>
-                      <p class="mt-4">
-                          For instantly purchase. Please make an order.
-                      </p>
-                      <div class="pt-5">
-                          <label for="name">
-                          <a class="btn text-white bg-green btn-lg">Buy now for $${this.props.route.params.price}</a>
-                          </label>
-                      </div>
-                      <div class="row text-center justify-content-center pt-5">
-                          <div class="col-sm-4">
-                              <p><em class="ion-ios-telephone-outline icon-md"></em></p>
-                              <p class="lead"><a href="tel:+[Your Phone]">+[Your Phone]</a></p>
-                          </div>
-                          <div class="col-sm-4">
-                              <p><em class="ion-ios-chatbubble-outline icon-md"></em></p>
-                              <p class="lead"><a href="mailto:email@[Your Domain].com">email@[Your Domain].com</a></p>
-                          </div>
-                      </div>
-                  </div>
+        <head><meta charset="utf-8">
+            <title>Sales Inquery || [Your Domain]</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+            <link href="https://fonts.googleapis.com/css?family=Mukta+Mahee:300,700" rel="stylesheet">
+            <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" />
+            <script src='https://www.google.com/recaptcha/api.js'></script>
+        </head>
+        <body><section class="bg-alt hero p-0">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-sm bg-faded text-center col-fixed">
+                        <div class="vMiddle">
+                        <h1 class="pt-4 h2">
+                            <span class="text-green">${route.params.domain_name}</span>
+                            <small>available for sale</small>
+                        </h1>
+                        <p class="mt-4">
+                            For instantly purchase. Please make an order.
+                        </p>
+                        <div class="pt-5">
+                            <label for="name">
+                            <a class="btn text-white bg-green btn-lg">Buy now for $${route.params.price}</a>
+                            </label>
+                        </div>
+                        <div class="row text-center justify-content-center pt-5">
+                            <div class="col-sm-4">
+                                <p><em class="ion-ios-telephone-outline icon-md"></em></p>
+                                <p class="lead"><a href="tel:+[Your Phone]">+[Your Phone]</a></p>
+                            </div>
+                            <div class="col-sm-4">
+                                <p><em class="ion-ios-chatbubble-outline icon-md"></em></p>
+                                <p class="lead"><a href="mailto:email@[Your Domain].com">email@[Your Domain].com</a></p>
+                            </div>
+                        </div>
+                    </div>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-    </body>
-      <style>${styles}</style>
-    </html>`
-}
+        </section>
+        </body>
+        <style>${styles}</style>
+        </html>`
+    }
 
-  render() {
     return (
-      <View style={style.container}>
-        <WebView          
-          ref={r => (this.webref = r)}
-          source={{ html: this.renderHtml() }}
-          javaScriptEnabled = {true}
-          automaticallyAdjustContentInsets={false}
-          style={{margin:0, padding:0}}
+        <View style={style.container}>
+        <WebView
+            source={{ html: renderHtml() }}
+            javaScriptEnabled = {true}
+            automaticallyAdjustContentInsets={false}
+            style={{margin:0, padding:0}}
         />
-      </View>
+        </View>
     );
-  }
 };
 
 const style = StyleSheet.create({
@@ -71,9 +68,6 @@ const style = StyleSheet.create({
     flex: 1
   }
 });
-
-
-export default Template1;
 
 const styles = `
 html {

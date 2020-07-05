@@ -1,12 +1,24 @@
 import { View } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import List from '../components/List.js';
-import Fab from '../components/Fab.js';
 import SQLite from 'react-native-sqlite-storage';
+import {Alert} from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { TouchableOpacity } from 'react-native';
 
 function Home ({navigation}) {
 
     const [flatListItems, setFlatListItems] = useState('');
+
+    React.useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <TouchableOpacity onPress={() => navigation.navigate("Add Domain")}>
+                    <Icon name="add" size={30} style={{padding:20}}/>
+                </TouchableOpacity>
+            ),
+        });
+    }, [navigation]);
 
     React.useEffect(() => {
         const unsubscribe = navigation.addListener('focus', () => {
@@ -52,17 +64,36 @@ function Home ({navigation}) {
                     temp.push(result.rows.item(i))
                 }
                 setFlatListItems(temp);
-                console.log(flatListItems);
             })
             .catch(error => {
                 console.log(error);
             });
     }
 
+    const deleteData = async function (id){
+        await ExecuteQuery('DELETE FROM table_domain WHERE id = ?', [id])
+        .then((result) => {
+            console.log(result);
+            Alert.alert(
+                'Success',
+                'Data deleted successfully',
+                [
+                  {
+                    text: 'Ok',
+                    onPress : () => LoadAllData()
+                  },
+                ],
+                { cancelable: false }
+            );
+        })
+        .catch(error => {
+            console.log(error);
+        });
+    };
+
     return (
         <View style={{flex:1}}>
-            <List data={flatListItems} navigation={navigation}/>
-            <Fab onPress={()=> navigation.navigate('Add Domain')}/>
+            <List data={flatListItems} onPress={(item) => {navigation.navigate('Template1', item)}} onDelete={(id) => deleteData(id) }/>
         </View>
     );
 }

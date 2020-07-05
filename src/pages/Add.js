@@ -1,6 +1,6 @@
 import { View } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { Button, StyleSheet, Alert, TextInput } from 'react-native';
 import SQLite from 'react-native-sqlite-storage';
 
 function Add ({navigation}) {
@@ -49,18 +49,16 @@ function Add ({navigation}) {
 
     return (
         <View style={styles.container}>
-            <View style={styles.textInput}>
+            <View style={styles.textInput} >
                 <TextInput
-                    style={{ height: 40, borderColor: 'gray', borderWidth: 1, width: '100%' }}
+                    placeholder = 'Domain Name'
                     onChangeText={text => setDomainName(text)}
                     value={domainName}
-                    placeholder="Domain Name"
                 />
                 <TextInput
-                    style={{ height: 40, borderColor: 'gray', borderWidth: 1, width: '100%', marginTop:'5%'}}
+                    placeholder = 'Price'
                     onChangeText={text => setPrice(text)}
                     value={price}
-                    placeholder="Price"
                     keyboardType='numeric'
                 />
             </View>
@@ -80,9 +78,7 @@ const styles = StyleSheet.create({
         justifyContent : 'space-between'
     },
     textInput : {
-        flex : 3,
         padding : 20,
-        alignItems : 'center',
     },
     button : {
         padding : 20,
