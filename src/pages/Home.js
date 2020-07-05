@@ -1,20 +1,28 @@
 import { View } from 'react-native';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import List from '../components/List.js';
-import data from '../data.json';
 import Fab from '../components/Fab.js';
 import SQLite from 'react-native-sqlite-storage';
 
-export default class Home extends React.Component {
+function Home ({navigation}) {
 
-    constructor() {
-        super();
-        SQLite.DEBUG = true;
-    }
+    const [flatListItems, setFlatListItems] = useState('');
 
-    state ={ FlatListItems : ''}
+    React.useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+          // The screen is focused
+            SQLite.DEBUG = true;
+            CreateTable();
+            LoadAllData();
+        });
+    
+        // Return the function to unsubscribe from the event so it gets removed on unmount
+        return unsubscribe;
+    }, [navigation]);
+    
+    
 
-    ExecuteQuery = (sql, params = []) => new Promise((resolve, reject) => {
+    const ExecuteQuery = (sql, params = []) => new Promise((resolve, reject) => {
         db.transaction((trans) => {
             trans.executeSql(sql, params, (trans, results) => {
                 resolve(results);
@@ -26,8 +34,8 @@ export default class Home extends React.Component {
     });
     
     // Create Table
-    CreateTable = async() => {
-        await this.ExecuteQuery("CREATE TABLE IF NOT EXISTS table_domain(id INTEGER PRIMARY KEY AUTOINCREMENT, domain_name VARCHAR(30), price INTEGER(10))",[])
+    const CreateTable = async() => {
+        await ExecuteQuery("CREATE TABLE IF NOT EXISTS table_domain(id INTEGER PRIMARY KEY AUTOINCREMENT, domain_name VARCHAR(30), price INTEGER(10))",[])
             .then(result => {
                 //console.log(result);
             })
@@ -36,30 +44,27 @@ export default class Home extends React.Component {
             });
     }
     
-    LoadAllData = async() =>{
-        await this.ExecuteQuery("SELECT * FROM table_domain",[])
+    const LoadAllData = async() =>{
+        await ExecuteQuery("SELECT * FROM table_domain",[])
             .then(result => {
                 let temp = [];
                 for (let i=0; i<result.rows.length; i++) {
                     temp.push(result.rows.item(i))
                 }
-                this.setState({FlatListItems : temp});
+                setFlatListItems(temp);
+                console.log(flatListItems);
             })
             .catch(error => {
                 console.log(error);
             });
     }
 
-    componentDidMount() {
-        this.CreateTable();
-        this.LoadAllData();
-    }
-    render() {
-        return (
-            <View style={{flex:1}}>
-                <List data={this.state.FlatListItems} navigation={this.props.navigation}/>
-                <Fab onPress={()=> this.props.navigation.navigate('Add Domain')}/>
-            </View>
-        );
-    }
+    return (
+        <View style={{flex:1}}>
+            <List data={flatListItems} navigation={navigation}/>
+            <Fab onPress={()=> navigation.navigate('Add Domain')}/>
+        </View>
+    );
 }
+
+export default Home;
