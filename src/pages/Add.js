@@ -1,16 +1,32 @@
-import { View } from 'react-native';
-import React, { useState, useEffect } from 'react';
-import { Button, StyleSheet, Alert, TextInput } from 'react-native';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
+import { Button, StyleSheet, Alert, TouchableOpacity , View } from 'react-native';
+import Icon from 'react-native-vector-icons/Ionicons';
 import SQLite from 'react-native-sqlite-storage';
+import Input from '../components/Input.js';
 
-function Add ({navigation}) {
+function Add ({navigation, route}) {
 
-    const [domainName, setDomainName] = useState('');
-    const [price, setPrice ] = useState('');
+    const [domainName, setDomainName] = useState(route.params.domain_name);
+    const [price, setPrice ] = useState(String(route.params.price));
 
     useEffect(() => {
         SQLite.DEBUG = true;
     }, [])
+
+    useLayoutEffect(() => {
+        navigation.setOptions({
+            headerRight: () => (
+                <View style={{flexDirection:'row'}}>
+                    <TouchableOpacity onPress={() => {navigation.navigate('Template1', route.params)}}>
+                        <Icon name="eye-outline" size={30} style={{padding:10}}/>
+                    </TouchableOpacity>
+                    <TouchableOpacity>
+                        <Icon name='download-outline' size={30} style={{padding:10}}/>
+                    </TouchableOpacity>
+                </View>
+            ),
+        });
+    }, [navigation]);
 
     const ExecuteQuery = (sql, params = []) => new Promise((resolve, reject) => {
         db.transaction((trans) => {
@@ -25,17 +41,12 @@ function Add ({navigation}) {
 
     const InsertQuery = async() => {
         // single insert query 
-        await ExecuteQuery("INSERT INTO table_domain (domain_name, price) VALUES (?,?)", [domainName, price])
+        await ExecuteQuery("UPDATE table_domain set domain_name=?, price=? where id=?", [domainName, price, route.params.id])
             .then(result => {
                 Alert.alert(
                     'Success',
-                    'New data added successfully',
+                    'Data updated successfully',
                     [
-                      {
-                        text: 'Cancel',
-                        onPress: () => console.log('Cancel Pressed'),
-                        style: 'cancel'
-                      },
                       { text: 'OK', onPress: ()=> navigation.navigate('Home') }
                     ],
                     { cancelable: false }
@@ -50,13 +61,13 @@ function Add ({navigation}) {
     return (
         <View style={styles.container}>
             <View style={styles.textInput} >
-                <TextInput
-                    placeholder = 'Domain Name'
-                    onChangeText={text => setDomainName(text)}
-                    value={domainName}
+                <Input
+                    title = 'Domain Name'
+                    onChangeText = {text => setDomainName(text)}
+                    value = {domainName}
                 />
-                <TextInput
-                    placeholder = 'Price'
+                <Input
+                    title = 'Price'
                     onChangeText={text => setPrice(text)}
                     value={price}
                     keyboardType='numeric'
@@ -64,7 +75,7 @@ function Add ({navigation}) {
             </View>
             <View style={styles.button}>
                 <Button
-                    title="Save"
+                    title="Apply"
                     onPress={InsertQuery}
                 />
             </View>

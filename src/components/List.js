@@ -1,5 +1,5 @@
 import React from 'react';
-import { SafeAreaView, FlatList, StyleSheet, Text, TouchableOpacity, Button, View} from 'react-native';
+import { SafeAreaView, FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 function Item({ domain, onPress, id, onDelete}) {
@@ -10,7 +10,7 @@ function Item({ domain, onPress, id, onDelete}) {
           <Text style={styles.title}>{domain}</Text>
       </TouchableOpacity>
       <View style={styles.delete} >
-        <Icon name="trash" size={30} color="grey" onPress={()=>onDelete(id)}/>
+        <Icon name="trash-outline" size={30} color="grey" onPress={()=>onDelete(id)}/>
       </View>
     </View>
     

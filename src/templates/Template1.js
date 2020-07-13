@@ -58,6 +58,7 @@ export default function Template1 ({route}) {
             javaScriptEnabled = {true}
             automaticallyAdjustContentInsets={false}
             style={{margin:0, padding:0}}
+            startInLoadingState={true}
         />
         </View>
     );

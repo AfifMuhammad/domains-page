@@ -5,15 +5,17 @@ import SQLite from 'react-native-sqlite-storage';
 import {Alert} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { TouchableOpacity } from 'react-native';
+import AddModal from '../components/AddModal.js';
 
 function Home ({navigation}) {
 
     const [flatListItems, setFlatListItems] = useState('');
+    const [modalVisible, setModalVisible] = useState(false);
 
     React.useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
-                <TouchableOpacity onPress={() => navigation.navigate("Add Domain")}>
+                <TouchableOpacity onPress={OpenModal}>
                     <Icon name="add" size={30} style={{padding:20}}/>
                 </TouchableOpacity>
             ),
@@ -70,7 +72,34 @@ function Home ({navigation}) {
             });
     }
 
-    const deleteData = async function (id){
+    const InsertQuery = async function (domainName) {
+        // single insert query 
+        await ExecuteQuery("INSERT INTO table_domain (domain_name, price) VALUES (?,?)", [domainName, '0'])
+            .then(result => {
+                Alert.alert(
+                    'Success',
+                    'New data added successfully',
+                    [
+                      { text: 'OK', onPress: ()=>{CloseModal(); LoadAllData()}}
+                    ],
+                    { cancelable: false }
+                );
+                console.log(result);
+            })
+            .catch(error => {
+                console.log(error);
+            })
+    }
+
+    const OpenModal = () => {
+        setModalVisible(true);
+    }
+
+    const CloseModal = () => {
+        setModalVisible(false);
+    }
+
+    const DeleteData = async function (id){
         await ExecuteQuery('DELETE FROM table_domain WHERE id = ?', [id])
         .then((result) => {
             console.log(result);
@@ -93,7 +122,8 @@ function Home ({navigation}) {
 
     return (
         <View style={{flex:1}}>
-            <List data={flatListItems} onPress={(item) => {navigation.navigate('Template1', item)}} onDelete={(id) => deleteData(id) }/>
+            <List data={flatListItems} onPress={(item) => {navigation.navigate('Add Properties', item)}} onDelete={(id) => DeleteData(id) }/>
+            <AddModal visibility={modalVisible} closeModal={CloseModal} saveDomain={(name) => InsertQuery(name)}/>
         </View>
     );
 }

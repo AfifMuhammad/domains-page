@@ -25,8 +25,8 @@ function StackNavigator() {
     <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen name="Home" component={Home} />
-        <Stack.Screen name="Template1" component={Template1} options={({ route }) => ({ title: route.params.domain })}/>
-        <Stack.Screen name="Add Domain" component={Add} />
+        <Stack.Screen name="Template1" component={Template1} options={({ route }) => ({ title: route.params.domain_name })}/>
+        <Stack.Screen name="Add Properties" component={Add} />
       </Stack.Navigator>
     </NavigationContainer>
   );
