@@ -6,7 +6,7 @@ export default function Template1 ({route}) {
   const renderHtml = () => {
     return `<html>
         <head><meta charset="utf-8">
-            <title>Sales Inquery || [Your Domain]</title>
+            <title>Sales Inquery || ${route.params.domain_name}</title>
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css">
             <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
