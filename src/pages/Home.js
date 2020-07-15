@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { View, ToastAndroid } from 'react-native';
 import React, { useState, useEffect } from 'react';
 import List from '../components/List.js';
 import SQLite from 'react-native-sqlite-storage';
@@ -99,21 +99,28 @@ function Home ({navigation}) {
         setModalVisible(false);
     }
 
+    const AlertDelete = function (id) {
+        Alert.alert(
+            'Delete',
+            'Remove data from device?',
+            [
+                {
+                    text: 'No'
+                },
+                {
+                    text: 'Yes',
+                    onPress : () => DeleteData(id)
+                }
+            ],
+            { cancelable: true }
+        );
+    }
+
     const DeleteData = async function (id){
         await ExecuteQuery('DELETE FROM table_domain WHERE id = ?', [id])
         .then((result) => {
-            console.log(result);
-            Alert.alert(
-                'Success',
-                'Data deleted successfully',
-                [
-                  {
-                    text: 'Ok',
-                    onPress : () => LoadAllData()
-                  },
-                ],
-                { cancelable: false }
-            );
+            ToastAndroid.show('Data deleted successfully', ToastAndroid.SHORT);
+            LoadAllData();
         })
         .catch(error => {
             console.log(error);
@@ -122,7 +129,7 @@ function Home ({navigation}) {
 
     return (
         <View style={{flex:1}}>
-            <List data={flatListItems} onPress={(item) => {navigation.navigate('Add Properties', item)}} onDelete={(id) => DeleteData(id) }/>
+            <List data={flatListItems} onPress={(item) => {navigation.navigate('Add Properties', item)}} onDelete={(id) => AlertDelete(id) }/>
             <AddModal visibility={modalVisible} closeModal={CloseModal} saveDomain={(name) => InsertQuery(name)}/>
         </View>
     );

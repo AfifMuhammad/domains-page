@@ -20,9 +20,6 @@ function Add ({navigation, route}) {
                     <TouchableOpacity onPress={() => {navigation.navigate('Template1', route.params)}}>
                         <Icon name="eye-outline" size={30} style={{padding:10}}/>
                     </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Icon name='download-outline' size={30} style={{padding:10}}/>
-                    </TouchableOpacity>
                 </View>
             ),
         });
